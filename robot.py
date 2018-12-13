@@ -1,52 +1,45 @@
-import ctre
+#!/usr/bin/env python3
+"""
+    This is a demo program showing the use of the RobotDrive class,
+    specifically it contains the code necessary to operate a robot with
+    tank drive.
+"""
+
 import wpilib
-from wpilib import DoubleSolenoid
-from wpilib.interfaces import GenericHID
+from wpilib.drive import DifferentialDrive
+from wpilib.interfaces import SpeedController
 
-import autonomous
-from subsystems.drivetrain import Drivetrain 
-
-LEFT = GenericHID.Hand.kLeft
-RIGHT = GenericHID.Hand.kRight
-
-#Motor IDs
-
-LEFT1_ID = 0
-LEFT2_ID = 0
-RIGHT1_ID = 0
-RIGHT2_ID = 0
-CENTER_ID = 0
-
-Class Robot(wpilib.IterativeRobot):
+class MyRobot(wpilib.IterativeRobot):
     def robotInit(self):
-	left1 = ctre.WPI_TalonSRX(LEFT1_ID)
-	left2 = ctre.WPI_TalonSRX(LEFT2_ID)
-	left = wpilib.SpeedControllerGroup(left1, left2)
-	left1.setNeutralMode(ctre.NeutralMode.Brake)
-	left2.setneutralMode(ctre.NeutralMode.Brake)
+        """Robot initialization function"""
 
-	right1 = ctre.WPI_TalonSRX(RIGHT1_ID)
-        right2 = ctre.WPI_TalonSRX(RIGHT2_ID)
-        right = wpilib.SpeedControllerGroup(right1, right2)
-        right1.setNeutralMode(ctre.NeutralMode.Brake)
-        right2.setNeutralMode(ctre.NeutralMode.Brake)
+        # object that handles basic drive operations
+        self.frontLeftMotor = wpilib.Talon(LEFT1_ID)
+        self.rearLeftMotor = wpilib.Talon(LEFT2_ID)
+        self.frontRightMotor = wpilib.Talon(RIGHT1_ID)
+        self.rearRightMotor = wpilib.Talon(RIGHT2_ID)
+	self.centerMotor = wpilib.Talon(CENTER_ID)
 
-	center = ctre.WPI.TalonSRX(CENTER_ID)
-	#speedcontrollergroup??
+        self.left = wpilib.SpeedControllerGroup(self.frontLeftMotor, self.rearLeftMotor)
+        self.right = wpilib.SpeedControllerGroup(
+            self.frontRightMotor, self.rearRightMotor
+        )
+	self.center = SpeedController(
+        self.myRobot = DifferentialDrive(self.left, self.right)
+        self.myRobot.setExpiration(0.1)
 
-	self.drivetrain = Drivetrain(left, right, center)
-	
-	self.driver = wpilib.XboxController(0)
-	self.operator = wpilib.XboxController(1)
+        # joysticks 1 & 2 on the driver station
+        self.leftStick = wpilib.Joystick(0)
+        self.rightStick = wpilib.Joystick(1)
 
-	self.auto_exec = iter([])
+    def teleopInit(self):
+        """Executed at the start of teleop mode"""
+        self.myRobot.setSafetyEnabled(True)
 
-	def robotPeriodic(self):
-	
-	def teleopInit(self):
+    def teleopPeriodic(self):
+        """Runs the motors with tank steering"""
+        self.myRobot.tankDrive(self.leftStick.getY() * -1, self.rightStick.getY() * -1)
 
-	def teleopPeriodic(self):
-	    forward = self.driver.getY(RIGHT)
-	    rotate = self.driver.getX(LEFT)
 
-		
+if __name__ == "__main__":
+    wpilib.run(MyRobot)
