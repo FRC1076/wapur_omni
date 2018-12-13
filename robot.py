@@ -12,19 +12,17 @@ from wpilib.interfaces import SpeedController
 class MyRobot(wpilib.IterativeRobot):
     def robotInit(self):
         """Robot initialization function"""
-
+        LEFT = 0
+        RIGHT = 1
+        CENTER = 2
         # object that handles basic drive operations
-        self.frontLeftMotor = wpilib.Talon(LEFT1_ID)
-        self.rearLeftMotor = wpilib.Talon(LEFT2_ID)
-        self.frontRightMotor = wpilib.Talon(RIGHT1_ID)
-        self.rearRightMotor = wpilib.Talon(RIGHT2_ID)
-	self.centerMotor = wpilib.Talon(CENTER_ID)
+        self.left = wpilib.Talon(LEFT)
+        self.right = wpilib.Talon(RIGHT)
+        self.center = wpilib.Talon(CENTER)
 
-        self.left = wpilib.SpeedControllerGroup(self.frontLeftMotor, self.rearLeftMotor)
-        self.right = wpilib.SpeedControllerGroup(
-            self.frontRightMotor, self.rearRightMotor
-        )
-	self.center = SpeedController(
+        self.left = wpilib.SpeedController(self.left)
+        self.right = wpilib.SpeedController(self.right)
+	    self.center = SpeedController(self.center)
         self.myRobot = DifferentialDrive(self.left, self.right)
         self.myRobot.setExpiration(0.1)
 
