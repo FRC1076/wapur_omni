@@ -43,6 +43,9 @@ class MyRobot(wpilib.IterativeRobot):
     def autonomousInit(self):
         self.myRobot.tankDrive(0.8, 0.8)
 
+    def autonomousPeriodic(self):
+        self.myRobot.tankDrive(1, 1)
+
     def teleopInit(self):
         """Executed at the start of teleop mode"""
         self.myRobot.setSafetyEnabled(False)
