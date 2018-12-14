@@ -7,7 +7,6 @@
 
 import wpilib
 from wpilib.drive import DifferentialDrive
-from wpilib.interfaces import SpeedController
 
 class MyRobot(wpilib.IterativeRobot):
     def robotInit(self):
@@ -16,13 +15,13 @@ class MyRobot(wpilib.IterativeRobot):
         RIGHT = 1
         CENTER = 2
         # object that handles basic drive operations
-        self.left = wpilib.Talon(LEFT)
-        self.right = wpilib.Talon(RIGHT)
-        self.center = wpilib.Talon(CENTER)
+        self.leftTalon = wpilib.Talon(LEFT)
+        self.rightTalon = wpilib.Talon(RIGHT)
+        self.centerTalon = wpilib.Talon(CENTER)
 
-        self.left = wpilib.SpeedController(self.left)
-        self.right = wpilib.SpeedController(self.right)
-	    self.center = SpeedController(self.center)
+        self.left = wpilib.interfaces.SpeedController(self.leftTalon)
+        self.right = wpilib.interfaces.SpeedController(self.rightTalon)
+        self.center = wpilib.interfaces.SpeedController(self.centerTalon)
         self.myRobot = DifferentialDrive(self.left, self.right)
         self.myRobot.setExpiration(0.1)
 
