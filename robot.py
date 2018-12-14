@@ -7,6 +7,7 @@
 
 import wpilib
 from wpilib.drive import DifferentialDrive
+from wpilib.interfaces import GenericHID
 
 class MyRobot(wpilib.IterativeRobot):
     def robotInit(self):
@@ -31,16 +32,26 @@ class MyRobot(wpilib.IterativeRobot):
         self.myRobot.setExpiration(0.1)
 
         # joysticks 1 & 2 on the driver station
-        self.leftStick = wpilib.Joystick(0)
-        self.rightStick = wpilib.Joystick(1)
+        # self.leftStick = wpilib.Joystick(0)
+        # self.rightStick = wpilib.Joystick(1)
+
+        self.LEFT = GenericHID.Hand.kLeft
+        self.RIGHT = GenericHID.Hand.kRight
+
+        self.driver = wpilib.XboxController(0)
+
+    def autonomousInit(self):
+        self.myRobot.tankDrive(0.8, 0.8)
 
     def teleopInit(self):
         """Executed at the start of teleop mode"""
-        self.myRobot.setSafetyEnabled(True)
+        self.myRobot.setSafetyEnabled(False)
 
     def teleopPeriodic(self):
         """Runs the motors with tank steering"""
-        self.myRobot.tankDrive(self.leftStick.getY() * -1, self.rightStick.getY() * -1)
+        line = self.driver.getY(self.RIGHT)
+        rotate = self.driver.getX(self.LEFT)
+        self.myRobot.tankDrive(line, rotate)
 
 
 if __name__ == "__main__":
