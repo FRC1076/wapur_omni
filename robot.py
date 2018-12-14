@@ -6,21 +6,22 @@
 """
 
 import wpilib
+import ctre
 from wpilib.drive import DifferentialDrive
 from wpilib.interfaces import GenericHID
 
 class MyRobot(wpilib.IterativeRobot):
     def robotInit(self):
         """Robot initialization function"""
-        LEFT = 0
-        RIGHT = 1
-        CENTER1 = 2
-        CENTER2 = 3
+        LEFT = 1
+        RIGHT = 2
+        CENTER1 = 3
+        CENTER2 = 4
         # object that handles basic drive operations
-        self.leftTalon = wpilib.Talon(LEFT)
-        self.rightTalon = wpilib.Talon(RIGHT)
-        self.centerTalon1 = wpilib.Talon(CENTER1)
-        self.centerTalon2 = wpilib.Talon(CENTER2)
+        self.leftTalon = ctre.WPI_TalonSRX(LEFT)
+        self.rightTalon = ctre.WPI_TalonSRX(RIGHT)
+        self.centerTalon1 = ctre.WPI_TalonSRX(CENTER1)
+        self.centerTalon2 = ctre.WPI_TalonSRX(CENTER2)
 
         self.left = wpilib.SpeedControllerGroup(self.leftTalon)
         self.right = wpilib.SpeedControllerGroup(self.rightTalon)
